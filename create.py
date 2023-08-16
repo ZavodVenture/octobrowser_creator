@@ -66,7 +66,7 @@ def launch_profiles(uuid_list):
 
         ws_list.append(result)
         bar.next()
-        sleep(1)
+        sleep(3)
 
     bar.finish()
     return ws_list
