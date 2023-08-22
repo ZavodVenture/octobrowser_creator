@@ -52,9 +52,9 @@ def worker(ws, wallet: Wallet, bar: Bar):
         sleep(3)
         driver.refresh()
 
-        WebDriverWait(driver, 5).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="onboarding__terms-checkbox"]'))).click()
-        WebDriverWait(driver, 5).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/ul/li[3]/button'))).click()
-        WebDriverWait(driver, 5).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div/button[1]'))).click()
+        WebDriverWait(driver, 10).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="onboarding__terms-checkbox"]'))).click()
+        WebDriverWait(driver, 10).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/ul/li[3]/button'))).click()
+        WebDriverWait(driver, 10).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div/button[1]'))).click()
 
         sleep(1)
 
@@ -67,16 +67,16 @@ def worker(ws, wallet: Wallet, bar: Bar):
         for index in range(12):
             driver.find_element(By.ID, f'import-srp__srp-word-{index}').send_keys(split[index])
 
-        WebDriverWait(driver, 5).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div[4]/div/button'))).click()
+        WebDriverWait(driver, 10).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div[4]/div/button'))).click()
 
         password = config_object.metamask_password if config_object.metamask_password else ''.join(sample(ascii_letters + digits, 30))
 
-        WebDriverWait(driver, 5).until(ec.presence_of_element_located((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div[2]/form/div[1]/label/input'))).send_keys(password)
-        WebDriverWait(driver, 5).until(ec.presence_of_element_located((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div[2]/form/div[2]/label/input'))).send_keys(password)
+        WebDriverWait(driver, 10).until(ec.presence_of_element_located((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div[2]/form/div[1]/label/input'))).send_keys(password)
+        WebDriverWait(driver, 10).until(ec.presence_of_element_located((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div[2]/form/div[2]/label/input'))).send_keys(password)
 
-        WebDriverWait(driver, 5).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div[2]/form/div[3]/label/input'))).click()
+        WebDriverWait(driver, 10).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div[2]/form/div[3]/label/input'))).click()
 
-        WebDriverWait(driver, 5).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div[2]/form/button'))).click()
+        WebDriverWait(driver, 10).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div[2]/form/button'))).click()
 
         WebDriverWait(driver, 15).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div[2]/button'))).click()
 
@@ -89,8 +89,8 @@ def worker(ws, wallet: Wallet, bar: Bar):
             else:
                 break
 
-        WebDriverWait(driver, 5).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div[2]/button'))).click()
-        WebDriverWait(driver, 5).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div[2]/button'))).click()
+        WebDriverWait(driver, 10).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div[2]/button'))).click()
+        WebDriverWait(driver, 10).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div[2]/button'))).click()
 
         open_success_page(driver)
     except Exception as e:
