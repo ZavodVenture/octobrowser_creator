@@ -80,6 +80,15 @@ def worker(ws, wallet: Wallet, bar: Bar):
 
         WebDriverWait(driver, 15).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div[2]/button'))).click()
 
+        while 1:
+            try:
+                sleep(0.5)
+                WebDriverWait(driver, 15).until_not(ec.presence_of_element_located((By.CLASS_NAME, 'loading-overlay')))
+            except:
+                driver.refresh()
+            else:
+                break
+
         WebDriverWait(driver, 5).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div[2]/button'))).click()
         WebDriverWait(driver, 5).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div[2]/button'))).click()
 
