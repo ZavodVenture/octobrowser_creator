@@ -47,50 +47,56 @@ def worker(ws, wallet: Wallet, bar: Bar):
         options.add_experimental_option("debuggerAddress", f'127.0.0.1:{ws}')
         driver = webdriver.Chrome(options=options)
 
-        driver.get('chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/home.html#onboarding/welcome')
+        driver.get('chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/home.html')
 
-        sleep(3)
-        driver.refresh()
+        try:
+            WebDriverWait(driver, 5).until(ec.presence_of_element_located((By.XPATH, '//div[@class="critical-error"]')))
+        except:
+            pass
+        else:
+            driver.refresh()
 
-        WebDriverWait(driver, 30).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="onboarding__terms-checkbox"]'))).click()
-        WebDriverWait(driver, 30).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/ul/li[3]/button'))).click()
-        WebDriverWait(driver, 30).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div/button[1]'))).click()
+        WebDriverWait(driver, 10).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="onboarding__terms-checkbox"]'))).click()
+        WebDriverWait(driver, 10).until(ec.element_to_be_clickable((By.XPATH, '//button[@data-testid="onboarding-import-wallet"]'))).click()
+        WebDriverWait(driver, 1)
+        WebDriverWait(driver, 10).until(ec.element_to_be_clickable((By.XPATH, '//button[@data-testid="metametrics-i-agree"]'))).click()
 
-        sleep(1)
+        WebDriverWait(driver, 60).until(ec.presence_of_element_located((By.ID, 'import-srp__srp-word-0')))
 
-        split = wallet.seed_phrase.split(' ')
+        seed = wallet.seed_phrase.split(' ')
 
-        if len(split) != 12:
+        if len(seed) != 12:
             open_error_page(driver, Error('Seed length error', 'The length of one of the seed-phrases is not equal to 12'))
             return
 
-        for index in range(12):
-            driver.find_element(By.ID, f'import-srp__srp-word-{index}').send_keys(split[index])
+        for j in range(12):
+            driver.find_element(By.ID, f'import-srp__srp-word-{j}').send_keys(seed[j])
 
-        WebDriverWait(driver, 30).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div[4]/div/button'))).click()
+        WebDriverWait(driver, 10).until(ec.element_to_be_clickable((By.XPATH, '//button[@data-testid="import-srp-confirm"]'))).click()
 
         password = config_object.metamask_password if config_object.metamask_password else ''.join(sample(ascii_letters + digits, 30))
 
-        WebDriverWait(driver, 30).until(ec.presence_of_element_located((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div[2]/form/div[1]/label/input'))).send_keys(password)
-        WebDriverWait(driver, 30).until(ec.presence_of_element_located((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div[2]/form/div[2]/label/input'))).send_keys(password)
+        WebDriverWait(driver, 20).until(ec.presence_of_element_located((By.XPATH, '//input[@data-testid="create-password-new"]'))).send_keys(password)
+        WebDriverWait(driver, 20).until(ec.presence_of_element_located(((By.XPATH, '//input[@data-testid="create-password-confirm"]')))).send_keys(password)
+        WebDriverWait(driver, 20).until(ec.presence_of_element_located((By.XPATH, '//input[@data-testid="create-password-terms"]'))).click()
 
-        WebDriverWait(driver, 30).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div[2]/form/div[3]/label/input'))).click()
+        WebDriverWait(driver, 20).until(ec.element_to_be_clickable((By.XPATH, '//button[@data-testid="create-password-import"]'))).click()
 
-        WebDriverWait(driver, 30).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div[2]/form/button'))).click()
-
-        WebDriverWait(driver, 30).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div[2]/button'))).click()
+        driver.implicitly_wait(5)
 
         while 1:
             try:
-                sleep(0.5)
-                WebDriverWait(driver, 15).until_not(ec.presence_of_element_located((By.CLASS_NAME, 'loading-overlay')))
+                sleep(5)
+                driver.find_element(By.XPATH, '//div[@class="loading-overlay"]')
             except:
-                driver.refresh()
-            else:
                 break
+            else:
+                driver.refresh()
+                continue
 
-        WebDriverWait(driver, 30).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div[2]/button'))).click()
-        WebDriverWait(driver, 30).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="app-content"]/div/div[2]/div/div/div/div[2]/button'))).click()
+        WebDriverWait(driver, 20).until(ec.element_to_be_clickable((By.XPATH, '//button[@data-testid="onboarding-complete-done"]'))).click()
+        WebDriverWait(driver, 20).until(ec.element_to_be_clickable((By.XPATH, '//button[@data-testid="pin-extension-next"]'))).click()
+        WebDriverWait(driver, 20).until(ec.element_to_be_clickable((By.XPATH, '//button[@data-testid="pin-extension-done"]'))).click()
 
         open_success_page(driver)
     except Exception as e:
