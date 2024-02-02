@@ -1,6 +1,7 @@
 from entities import Wallet, Error
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
@@ -9,6 +10,7 @@ from time import sleep
 from create import config_object
 from random import sample
 from string import ascii_letters, digits
+from webdriver_manager.chrome import ChromeDriverManager
 
 
 def open_success_page(driver: webdriver.Chrome):
@@ -43,9 +45,10 @@ document.body.appendChild(div);'''
 
 def worker(ws, wallet: Wallet, bar: Bar):
     try:
+        service = Service(executable_path=ChromeDriverManager('120.0.6099.71').install())
         options = Options()
         options.add_experimental_option("debuggerAddress", f'127.0.0.1:{ws}')
-        driver = webdriver.Chrome(options=options)
+        driver = webdriver.Chrome(options=options, service=service)
 
         driver.get('chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/home.html')
 
